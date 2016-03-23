@@ -43,10 +43,13 @@ searched_tweets = []
 last_id = -1
 max_tweets = 300000
 individual_hash_level = 2000
+q_tags = []
 queryList = ["feelthebern","wewantbernie","stillsanders","presidentbernie","weendorsebernie","berniesanders2016","voteforberniesanders","vote4bernie","berniesanders","election","politics","berniesandersforpresident","bernie2016","election2016","bernie","hillaryclinton","arizona","trump","hillary2016","tedcruz","republicans","utah","cruz2016","imwithher","boise","hillary","democrats","conservatives","saltlakecity","president","donaldtrump","independents","progressive","potus","voteforbernie","cruz","liberals","trump2016","boisestate","idaho","angrydjlife","kasich2016","gawker","thedrop","promoterscomplaining","promoterproblems","rave","ravegirls","djscomplaining","djfail","clublife","edmgirls","edmlife","makeamericahateagain","drumpf","hitler","makedonalddrumpfagain","republican","trumptrain","gop","beardedvillains","dumptrump","funny","clinton2016","cannabis","wolfblitzer","cannabiscommunity","funnyshit","trumprally","presidentialelection","voldemort","hilaryclinton","fuckhilary","doloresumbridge","fucktrump","wizard","saveus","harrypotter","hogwarts","jkrowling","newyorkcity","monday","newyork","mrtrump","fail","america","fails","lmao","usa","lol","ny","hilarious","letsmakeamericagreatagain","nyc","us","cuba","mondaymotivation","vegan","nonas","raw","lootcrate","beyondwonderland","demdebate","blacklivesmatter","vote","batmanvsuperman","thewalkingdead","obama","gameofthrones","nationalfragranceday","dccomics","gopdebate","cali","politicalrevolution","easter","phsociopoliticalissues","vscophilippines","1goodvote","eleksyon2016","kirk","kobayashimaru","captainkirk","startrek","nowallforribbert","ribbert4prez","trumpisachump","voteforme","aipac2016","ivoted","hillaryforprison","foxnews","getoutandvote","presidenttrump","makeamericagreatagain","maga","trusted","hilary2016","aipac","marchmadness","trumpforpresident","victory","cnn","alwaystrump","canadiansforbernie","cruztovictory","republicanparty","reagan","azprimary","2a","gunowners","cruzcrew","utprimary","muhroads","ojandtoothpaste","haggiswatermelon","donttreadonme","2016presidentialelection","onionandbananajuice","notwithher","pepperonidogfart","marcorubio","democratparty","presidentialelection2016","dietmountaindew","pololitics","couch","lays","libertarianparty","anarchist","bencarson","billclinton","clarkcollege","isthisit"]
 #queryList = ["GOPDebate","DemDebate","election2016","usaElection2016","#debates"]
 #random.shuffle(queryList)
 for query in queryList:
+    if len(searched_tweets) > max_tweets:
+        break
     print query
     last_id = -1
     query_tweets = []
@@ -59,6 +62,8 @@ for query in queryList:
             query_tweets.extend(new_tweets)
             print "Fetched: " + str(len(new_tweets))
             last_id = new_tweets[-1].id
+            q_list = [query] * len(new_tweets)
+            q_tags.extend(q_list)
         except tweepy.TweepError as e:
             # depending on TweepError.code, one may want to retry or wait
             # to keep things simple, we will give up on an error
@@ -68,11 +73,11 @@ for query in queryList:
     time.sleep(10)
 
 print "Fetched: " + str(len(searched_tweets))
-
-
+print len(q_tags)
 fh = open("data.csv", 'w')
-for tweet in searched_tweets:
-	fh.write(str(tweet.lang) + "," + query +","+str(tweet.retweeted) + ",'"+str(tweet.user.id) + "," + str(tweet.id) + "," + str(tweet.created_at) + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +tweet.text.replace('\n', ' ').replace('\r', ' ').replace(',', ' ') + '\n')
+for tweet, q in zip(searched_tweets, q_tags):
+    print q
+    fh.write(str(tweet.lang) + "," + q +","+str(tweet.retweeted) + ",'"+str(tweet.user.id) + ",'" + str(tweet.id) + "," + str(tweet.created_at) + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +tweet.text.replace('\n', ' ').replace('\r', ' ').replace(',', ' ') + '\n')
 
 #frozen = jsonpickle.encode(searched_tweets[0])
 #print frozen
