@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
+"""
+usage:
+	python random_baselining.py /file/to/input
+	/file/to/input should be in .csv
+"""
 import math
 import random
 import sys
