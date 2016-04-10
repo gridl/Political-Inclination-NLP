@@ -97,6 +97,11 @@ def getEntities(line):
 				break
 	return list(op)
 
+def isClassPresent(classes,key):
+	if key in classes:
+		return True
+	else:
+		return False
 
 def getCl(fn):
 	fr = open(fn,"r")
