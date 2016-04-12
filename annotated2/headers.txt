@@ -1,1 +1,0 @@
-#language,hashtag,retweet,userId,tweetId,createdAt,hillary,bernie,trump,cruz,gop,dem,presentInOriginal,tagName,tweetText
