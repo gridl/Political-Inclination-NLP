@@ -20,10 +20,7 @@ access_token = []
 access_secret = []
 
 
-consumer_key.extend(['BuamdDtGgiUMFjPX0j1ZGfFuU'])
-consumer_secret.extend(['r06YXs2wRePrsCMOdWWMxKBDUP7AEjZLmzcuxSNYHvuQB8ynXc'])
-access_token.extend(['108324710-FNh5JrXEMMycUqKum5GSCKDjzYSGN0qhypGN1S4v'])
-access_secret.extend(['JIpQZ7z23NiQqtkFSR8GEEvaPPUlF44w9zB0tkvkU5JFY'])
+
 
 consumer_key.extend(['kZyMSZBRORZaDdutIIMja6v85'])
 consumer_secret.extend(['Mbu2HqI0Ea6MSIRr3B7MKgMSxEdQpJXqOEb4n4oAMLLulQxDXm'])
@@ -39,6 +36,11 @@ consumer_key.extend(["BlweSNHSKmeSur5YkXMxzkUUV"])
 consumer_secret.extend(["KocCMLcrY4u34eqt2UNSm9wk89MZdrRSjKfZdzJxVgKNT56aCI"])
 access_token.extend(["4317032720-yxQUoRRj6SZtDSSf7RsgvSCjukEHFNbQGbWJPpY"])
 access_secret.extend(["UWRd46OzsWezffVASlQpzgJ8EMUcX2HHZPFadw4bM7K9k"])
+
+consumer_key.extend(['BuamdDtGgiUMFjPX0j1ZGfFuU'])
+consumer_secret.extend(['r06YXs2wRePrsCMOdWWMxKBDUP7AEjZLmzcuxSNYHvuQB8ynXc'])
+access_token.extend(['108324710-FNh5JrXEMMycUqKum5GSCKDjzYSGN0qhypGN1S4v'])
+access_secret.extend(['JIpQZ7z23NiQqtkFSR8GEEvaPPUlF44w9zB0tkvkU5JFY'])
 	
 def removeURL(input):
 	output = input.replace('\r','').replace('\n','')
@@ -102,11 +104,13 @@ max_tweets = 3000000
 individual_hash_level = max_tweets
 q_tags = []
 queryList1 = ["feelthebern","wewantbernie","stillsanders","presidentbernie","weendorsebernie","berniesanders2016","voteforberniesanders","vote4bernie","berniesanders","berniesandersforpresident","bernie2016","election2016","bernie","hillaryclinton","trump","hillary2016","tedcruz","republicans","cruz2016","imwithher","hillary","democrats","conservatives","donaldtrump","voteforbernie","cruz","trump2016","makeamericahateagain","drumpf","makedonalddrumpfagain","republican","trumptrain","gop","dumptrump","clinton2016","trumprally","presidentialelection","hilaryclinton","fuckhilary","fucktrump","mrtrump","letsmakeamericagreatagain","demdebate","gopdebate","trumpisachump","aipac2016","hillaryforprison","presidenttrump","makeamericagreatagain","hilary2016","trumpforpresident","alwaystrump","canadiansforbernie","cruztovictory","republicanparty","cruzcrew","2016presidentialelection","notwithher","presidentialelection2016","billclinton","whichhillary","releasethetranscripts"]
-queryList = ["trump2016","makeamericahateagain","drumpf","makedonalddrumpfagain","republican","trumptrain","gop","dumptrump","clinton2016","trumprally","presidentialelection","hilaryclinton","fuckhilary","fucktrump","mrtrump","letsmakeamericagreatagain","demdebate","gopdebate","trumpisachump","aipac2016","hillaryforprison","presidenttrump","makeamericagreatagain","hilary2016","trumpforpresident","alwaystrump","canadiansforbernie","cruztovictory","republicanparty","cruzcrew","2016presidentialelection","notwithher","presidentialelection2016","billclinton","whichhillary","releasethetranscripts"]
+queryList4 = ["trump2016","makeamericahateagain","drumpf","makedonalddrumpfagain","republican","trumptrain","gop","dumptrump","clinton2016","trumprally","presidentialelection","hilaryclinton","fuckhilary","fucktrump","mrtrump","letsmakeamericagreatagain","demdebate","gopdebate","trumpisachump","aipac2016","hillaryforprison","presidenttrump","makeamericagreatagain","hilary2016","trumpforpresident","alwaystrump","canadiansforbernie","cruztovictory","republicanparty","cruzcrew","2016presidentialelection","notwithher","presidentialelection2016","billclinton","whichhillary","releasethetranscripts"]
 queryList3 = ["whichhillary","releasethetranscripts"]
+queryList2 = ["NoHillary","NotMiAbuela","NotMyAbuela","CualHillary" ,"NeverHillary","HillNo","Shillary","ShamelessHillary","OhHillNo","HillaryUntrustworthy","StopHillary","FrackYouHillary","BeatHillary","NeverEverHillary","NeverEverEverHillary","HillaryLies"]
+queryList = queryList2
 print len(queryList)
 
-fw = open("data_test_concurrent_Apr_14_1.csv", 'w')
+fw = open("data_test_concurrent_Apr_16_1.csv", 'w')
 counter = 0
 for query in queryList:
     if len(searched_tweets) > max_tweets:
@@ -118,6 +122,7 @@ for query in queryList:
         count = max_tweets - len(query_tweets)
         try:
             query1 = "#"+query
+            #new_tweets = api.search(q=query, count=count, max_id=str(last_id - 1) , lang = "es",since="2010-03-01",until="2016-04-24")
             new_tweets = api.search(q=query, count=count, max_id=str(last_id - 1) , lang = "es")
             counter += 1
             print "counter :  " + str(counter)
@@ -145,7 +150,7 @@ for query in queryList:
 
 print "Fetched: " + str(len(searched_tweets))
 print len(q_tags)
-fh = open("data_test_Apr_14_1.csv", 'w')
+fh = open("data_test_Apr_16_1.csv", 'w')
 for tweet, q in zip(searched_tweets, q_tags):
     #print q
     fh.write(str(tweet.lang) + "," + q +","+str(tweet.retweeted) + ",'"+str(tweet.user.id) + ",'" + str(tweet.id) + "," + str(tweet.created_at) + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +tweet.text.replace('\n', ' ').replace('\r', ' ').replace(',', ' ') + '\n')
