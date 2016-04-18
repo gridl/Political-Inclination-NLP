@@ -16,7 +16,7 @@ demNuetral = ["democrats", "bernie","hillary"]
 nuetral = ["presidentialelection","demdebate","gopdebate","aipac2016","2016presidentialelection","presidentialelection2016"]
 
 file_names = ["rawdata.csv"]
-out_file_name = "annotated.csv"
+out_file_name = "../2_learn_classify/annotated.csv"
 
 def getValue(tag, positiveTags, negativeTags):
     if tag in positiveTags:

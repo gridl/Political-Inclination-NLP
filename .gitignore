@@ -63,3 +63,7 @@ target/
 
 #MAC files
 .DS_Store
+
+# Big Files
+rawdata.csv
+annotated.csv
