@@ -5,10 +5,10 @@ from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 import json
-import goslate
+#import goslate
 import sys
-from translate import translator
-import urllib2
+#from translate import translator
+#import urllib2
 import jsonpickle
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -89,12 +89,11 @@ access_secret.extend = "UWRd46OzsWezffVASlQpzgJ8EMUcX2HHZPFadw4bM7K9k"
 
 auth , api , key = rotateSecurity(-1)
 
-proxy_handler = urllib2.ProxyHandler({"http" : "http://52.10.153.135:8083"})
-proxy_opener = urllib2.build_opener(urllib2.HTTPHandler(proxy_handler),
-                                    urllib2.HTTPSHandler(proxy_handler))
+#proxy_handler = urllib2.ProxyHandler({"http" : "http://52.10.153.135:8083"})
+#proxy_opener = urllib2.build_opener(urllib2.HTTPHandler(proxy_handler), urllib2.HTTPSHandler(proxy_handler))
 
 #gs = goslate.Goslate(opener=proxy_opener)
-gs = goslate.Goslate()
+#gs = goslate.Goslate()
 
 t_list = [] 
 
@@ -110,7 +109,7 @@ queryList2 = ["NoHillary","NotMiAbuela","NotMyAbuela","CualHillary" ,"NeverHilla
 queryList = queryList2
 print len(queryList)
 
-fw = open("data_test_concurrent_Apr_16_1.csv", 'w')
+fw = open("data_test_concurrent_Apr_16_3.csv", 'w')
 counter = 0
 for query in queryList:
     if len(searched_tweets) > max_tweets:
@@ -150,7 +149,7 @@ for query in queryList:
 
 print "Fetched: " + str(len(searched_tweets))
 print len(q_tags)
-fh = open("data_test_Apr_16_1.csv", 'w')
+fh = open("data_test_Apr_16_3.csv", 'w')
 for tweet, q in zip(searched_tweets, q_tags):
     #print q
     fh.write(str(tweet.lang) + "," + q +","+str(tweet.retweeted) + ",'"+str(tweet.user.id) + ",'" + str(tweet.id) + "," + str(tweet.created_at) + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +tweet.text.replace('\n', ' ').replace('\r', ' ').replace(',', ' ') + '\n')

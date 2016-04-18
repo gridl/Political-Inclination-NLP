@@ -55,6 +55,7 @@ def purifyText(input):
     op = re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', output)
     op1 = " ".join(getPureWord(w) for w in op.split())
     return op1.strip()
+    #return input
 
 
 def buildHash():
@@ -113,22 +114,29 @@ test_set = []
 
 for x in ['a', 'b', 'c', 'd', 'e']:
 #for x in ['annotatedTrump2.csv']:
-    with codecs.open('../python/Annotated4/annotated.csva' + x, 'rb') as csvfile:
-        tweets = csv.reader(csvfile, delimiter=',')
+    #with codecs.open('../python/Annotated4/annotated.csva' + x, 'rb') as csvfile:
+    tweets = []
+    with open('../python/Annotated4/annotated.csva' + x, 'rb') as csvfile:
+        tweets = csvfile.readlines()
+        #tweets = csv.reader(csvfile, delimiter=',')
         #random.shuffle(tweets)
-        for tweet in tweets:
-            #print tweet[13]
-            #sys.exit()
-            if tweet[13] == 'berniePositive':
-                bernie_tweets.append(tweet)
-            elif tweet[13] == 'hillaryPositive':
-                hil_tweets.append(tweet)
-            elif tweet[13] == 'cruzPositive':
-                cruz_tweets.append(tweet)
-            elif tweet[13] == 'trumpPositive':
-                trump_tweets.append(tweet)
-            #elif tweet[12] == 'nuetral':
-            #    test_set.append(tweet)
+    for tweetstr in tweets:
+        tweet = tweetstr.split(",")
+        if len(tweet) != 15:
+            print tweet
+            sys.exit()
+        #print tweet[13]
+        #sys.exit()
+        if tweet[13] == 'berniePositive':
+            bernie_tweets.append(tweet)
+        elif tweet[13] == 'hillaryPositive':
+            hil_tweets.append(tweet)
+        elif tweet[13] == 'cruzPositive':
+            cruz_tweets.append(tweet)
+        elif tweet[13] == 'trumpPositive':
+            trump_tweets.append(tweet)
+        #elif tweet[12] == 'nuetral':
+        #    test_set.append(tweet)
 
 
 
@@ -176,21 +184,53 @@ test_set.extend(te_hil_tweets)
 
 # Ref - http://www.nltk.org/api/nltk.classify.html
 # ALGORITHMS = ['GIS', 'IIS', 'MEGAM', 'TADM']
-algorithm = nltk.classify.MaxentClassifier.ALGORITHMS[1]
-classifier = nltk.MaxentClassifier.train(train_set, algorithm, max_iter=3)
-classifier.show_most_informative_features(10)
+#algorithm = nltk.classify.MaxentClassifier.ALGORITHMS[1]
+#classifier = nltk.MaxentClassifier.train(train_set, algorithm, max_iter=3)
+#classifier.show_most_informative_features(10)
+
+classifier = nltk.NaiveBayesClassifier.train(train_set)
 
 #print(nltk.classify.accuracy(classifier, test_set))
 
 
 with open("hijackoutput.csv", 'wb') as f:
+    random_tags = ["hillaryPositive", "trumpPositive", "cruzPositive", "berniePositive"]
     for tweet in test_set:
+        random.shuffle(random_tags)
         op1 = purifyText(tweet[14])
-        #op = getEntities(op1)
+        
+        op = getEntities(op1)
+
         result = classifier.classify(tweet_word(op1))
+        #if result.strip() == "" or op1.strip() == "":
+        #    print "Problem!!!! ",op1, result
+
+        #print tweet[14], result
+
+        if not op:
+            tweet.insert(14, random_tags[0])
+        else:
+            random.shuffle(op)
+            random.shuffle(op)
+
+            if "trump" in op[0]:
+                tweet.insert(14, "trumpPositive")
+            elif "cruz" in op[0]:
+                tweet.insert(14, "cruzPositive")
+            elif "hillary" in op[0]:
+                tweet.insert(14, "hillaryPositive")
+            elif "bernie" in op[0]:
+                tweet.insert(14, "berniePositive")
+            else:
+                tweet.insert(14, random_tags[0])
+
+        tweet.insert(14, random_tags[0])
         tweet.insert(14, result)
+        
+
         f.write(','.join(map(str, tweet)))
         f.write("\n")
+
         '''
         if "trump" in op or "bernie" in op or "hillary" in op or "cruz" in op:
             result = classifier.classify(tweet_word(op1))
