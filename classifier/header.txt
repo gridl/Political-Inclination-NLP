@@ -1,0 +1,3 @@
+Lang	hashtag	retweet	tim	time	date	H	B	T	C	D	R	ispresent	currenttag	newtag	randomtag	match_new	matach_random	tweet
+
+Lang	hashtag	retweet	tim	time	date	H	B	T	C	D	R	ispresent	currenttag	newtag	randomtag	enttag	match_new	match_random	match_ent	tweet	
