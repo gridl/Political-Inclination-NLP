@@ -1,0 +1,3 @@
+cd CSCI-544/python/Annotated4;
+cat combined_annotate.csva* > ../../demo/1_retrieval/rawdata.csv;
+cat combined_annotate.csva* > ../../livedemo/1_retrieval/rawdata.csv;
