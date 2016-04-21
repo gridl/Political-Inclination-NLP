@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
 
+import nltk
 import csv
 import random
 import codecs
 import re
-#from nltk.corpus import stopwords
+from nltk.corpus import stopwords
+import sys
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import SGDClassifier #SVM Linear
 
-
-#stopset = list(set(stopwords.words('spanish')))
-stopwords = ["rt","un","una","unas","unos","uno","sobre","todo","también","tras","otro","algún","alguno","alguna","algunos","algunas","ser","es","soy","eres","somos","sois","estoy","esta","estamos","estais","estan","como","en","para","atras","porque","por qué","estado","estaba","ante","antes","siendo","ambos","pero","por","poder","puede","puedo","podemos","podeis","pueden","fui","fue","fuimos","fueron","hacer","hago","hace","hacemos","haceis","hacen","cada","fin","incluso","primero desde","conseguir","consigo","consigue","consigues","conseguimos","consiguen","ir","voy","va","vamos","vais","van","vaya","gueno","ha","tener","tengo","tiene","tenemos","teneis","tienen","el","la","lo","las","los","su","aqui","mio","tuyo","ellos","ellas","nos","nosotros","vosotros","vosotras","si","dentro","solo","solamente","saber","sabes","sabe","sabemos","sabeis","saben","ultimo","largo","bastante","haces","muchos","aquellos","aquellas","sus","entonces","tiempo","verdad","verdadero","verdadera   cierto","ciertos","cierta","ciertas","intentar","intento","intenta","intentas","intentamos","intentais","intentan","dos","bajo","arriba","encima","usar","uso","usas","usa","usamos","usais","usan","emplear","empleo","empleas","emplean","ampleamos","empleais","valor","muy","era","eras","eramos","eran","modo","bien","cual","cuando","donde","mientras","quien","con","entre","sin","trabajo","trabajar","trabajas","trabaja","trabajamos","trabajais","trabajan","podria","podrias","podriamos","podrian","podriais","yo","aquel"]
-stopset = list(set(stopwords))
-pos_tweets = []
-neg_tweets = []
+stopset = list(set(stopwords.words('spanish')))
+hil_tweets = []
+trump_tweets = []
+bernie_tweets = []
+cruz_tweets = []
 classes = {}
 
 def transform(temp):
@@ -46,7 +47,7 @@ def getPureWord(word):
     temp = word.lower()
     if str.startswith(temp,"http"):
         return ""
-    temp = ''.join(e for e in temp if e.isalpha())
+    temp = ''.join(e for e in temp if e.isalpha()) 
     #if temp not in stop_words and temp !='':
     if temp not in stopset and temp !='':
         return transform(temp)
@@ -58,10 +59,11 @@ def purifyText(input):
     op = re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', output)
     op1 = " ".join(getPureWord(w) for w in op.split())
     return op1.strip()
+    #return input
 
 
 def buildHash():
-    #Hillary, Bernie, Trump, Cruz, GOP, DEM
+    #Hillary, Bernie, Trump, Cruz, GOP, DEM 
     classes["trump"] = ["donald","trump","donaldtrump"]
     classes["cruz"] = ["tedcruz","cruz","ted"]
     classes["hillary"] = ["hillaryclinton","hillary","clinton"]
@@ -114,44 +116,139 @@ def tweet_word(words):
 buildHash()
 test_set = []
 
-train_tags = []
-train_tweets = []
+#for x in ['a', 'b', 'c', 'd', 'e']:
+for x in ['annotated.csv']:
+    #with codecs.open('../python/Annotated4/annotated.csva' + x, 'rb') as csvfile:
+    tweets = []
+    with open('./' + x, 'rb') as csvfile:
+        tweets = csvfile.readlines()
+        #tweets = csv.reader(csvfile, delimiter=',')
+        #random.shuffle(tweets)
+    for tweetstr in tweets:
+        tweet = tweetstr.split(",")
+        if len(tweet) != 15:
+            print tweet
+            sys.exit()
+        #print tweet[13]
+        #sys.exit()
+        if tweet[13] == 'berniePositive':
+            bernie_tweets.append(tweet)
+        elif tweet[13] == 'hillaryPositive':
+            hil_tweets.append(tweet)
+        elif tweet[13] == 'cruzPositive':
+            cruz_tweets.append(tweet)
+        elif tweet[13] == 'trumpPositive':
+            trump_tweets.append(tweet)
+        #elif tweet[12] == 'nuetral':
+        #    test_set.append(tweet)
 
-#for x in ['a', 'b', 'c', 'd', 'e', 'f']:
-for x in ['annotatedTrump2.csv']:
-    with codecs.open('../python/annotated2/' + x, 'rb') as csvfile:
-        tweets = csv.reader(csvfile, delimiter=',', quotechar='\'')
-        for tweet in tweets:
-            if tweet[7] == '1':
-    			train_tags.append(0)
-            elif tweet[7] == '-1':
-                train_tags.append(1)
-            train_tweets.append(purifyText(tweet[13]))
+
+
+random.shuffle(bernie_tweets)
+random.shuffle(hil_tweets)
+random.shuffle(cruz_tweets)
+random.shuffle(trump_tweets)
+
+tr_bernie_tweets = bernie_tweets[:3000]
+tr_hil_tweets = hil_tweets[:3000]
+tr_cruz_tweets = cruz_tweets[:3000]
+tr_trump_tweets = trump_tweets[:3000]
+
+te_bernie_tweets = bernie_tweets[3000:]
+te_hil_tweets = hil_tweets[3000:]
+te_cruz_tweets = cruz_tweets[3000:]
+te_trump_tweets = trump_tweets[3000:]
+
+#labeled_words = ([(purifyText(word[14]), 'hillaryPositive') for word in tr_hil_tweets] + [(purifyText(word[14]), 'trumpPositive') for word in tr_trump_tweets] + [(purifyText(word[14]), 'cruzPositive') for word in tr_cruz_tweets] + [(purifyText(word[14]), 'berniePositive') for word in tr_bernie_tweets])
+train_tweets = [purifyText(word[14]) for word in tr_hil_tweets] + [purifyText(word[14]) for word in tr_trump_tweets] + [purifyText(word[14]) for word in tr_cruz_tweets] + [purifyText(word[14]) for word in tr_bernie_tweets]
+train_tags = ([0]*3000) + ([1]*3000) + ([2]*3000) + ([3]*3000)
 
 text_clf = Pipeline([('vect', CountVectorizer()),('tfidf', TfidfTransformer()),('clf', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, n_iter=5, random_state=42)),])
 text_clf = text_clf.fit(train_tweets, train_tags)
 
+#random.shuffle(labeled_words)
+#featuresets = [(tweet_word(n), classify) for (n, classify) in labeled_words]
+#train_set = featuresets
+
+'''
+labeled_words = ([(word, 'hillary') for word in te_hil_tweets] + [(word, 'trump') for word in te_trump_tweets] + [(word, 'cruz') for word in te_cruz_tweets] + [(word, 'bernie') for word in te_bernie_tweets])
+random.shuffle(labeled_words)
+featuresets = [(tweet_word(n), classify) for (n, classify) in labeled_words]
+test_set = featuresets
+'''
 # Generating Test Set...
+'''
 for x in ['testTrump.csv']:
     with codecs.open('../python/annotated2/' + x, 'rb') as csvfile:
         tweets = csv.reader(csvfile, delimiter=',', quotechar='\'')
         for tweet in tweets:
             if tweet[7] == '0':
                 test_set.append(tweet)
+'''
 
-i = 1
-with open("svmoutput.csv", 'wb') as f:
+test_set = []
+test_set.extend(te_bernie_tweets)
+test_set.extend(te_cruz_tweets)
+test_set.extend(te_trump_tweets)
+test_set.extend(te_hil_tweets)
+
+# Ref - http://www.nltk.org/api/nltk.classify.html
+# ALGORITHMS = ['GIS', 'IIS', 'MEGAM', 'TADM']
+#algorithm = nltk.classify.MaxentClassifier.ALGORITHMS[1]
+#classifier = nltk.MaxentClassifier.train(train_set, algorithm, max_iter=3)
+#classifier.show_most_informative_features(10)
+
+#classifier = nltk.NaiveBayesClassifier.train(train_set)
+
+#print(nltk.classify.accuracy(classifier, test_set))
+
+
+with open("classifyoutput.csv", 'wb') as f:
+    random_tags = ["hillaryPositive", "trumpPositive", "cruzPositive", "berniePositive"]
+    all_tags = ["hillaryPositive", "trumpPositive", "cruzPositive", "berniePositive"]
     for tweet in test_set:
-        op1 = purifyText(tweet[13])
+        random.shuffle(random_tags)
+        op1 = purifyText(tweet[14])
+        
         op = getEntities(op1)
-        if "trump" in op:
-            result = text_clf.predict([op1])
-            if result[0] == 0:
-                tweet[7] = 1
-                tweet[12] = tweet[12] + "/positive"
-            else:
-                tweet[7] = -1
-                tweet[12] = tweet[12] + "/negative"
 
-            f.write(','.join(map(str, tweet)))
-            f.write("\n")
+        #result = classifier.classify(tweet_word(op1))
+        result = text_clf.predict([op1])
+        #if result.strip() == "" or op1.strip() == "":
+        #    print "Problem!!!! ",op1, result
+
+        #print tweet[14], result
+
+        if not op:
+            tweet.insert(14, random_tags[0])
+        else:
+            random.shuffle(op)
+            random.shuffle(op)
+
+            if "trump" in op[0]:
+                tweet.insert(14, "trumpPositive")
+            elif "cruz" in op[0]:
+                tweet.insert(14, "cruzPositive")
+            elif "hillary" in op[0]:
+                tweet.insert(14, "hillaryPositive")
+            elif "bernie" in op[0]:
+                tweet.insert(14, "berniePositive")
+            else:
+                tweet.insert(14, random_tags[0])
+
+        tweet.insert(14, random_tags[0])
+        tweet.insert(14, all_tags[result[0]])
+        
+
+        f.write(','.join(map(str, tweet)))
+        f.write("\n")
+
+        '''
+        if "trump" in op or "bernie" in op or "hillary" in op or "cruz" in op:
+            result = classifier.classify(tweet_word(op1))
+            print tweet[13]
+            print result
+        '''
+        #else:
+        #    print result + "Positive"
+
