@@ -106,10 +106,11 @@ queryList1 = ["feelthebern","wewantbernie","stillsanders","presidentbernie","wee
 queryList4 = ["trump2016","makeamericahateagain","drumpf","makedonalddrumpfagain","republican","trumptrain","gop","dumptrump","clinton2016","trumprally","presidentialelection","hilaryclinton","fuckhilary","fucktrump","mrtrump","letsmakeamericagreatagain","demdebate","gopdebate","trumpisachump","aipac2016","hillaryforprison","presidenttrump","makeamericagreatagain","hilary2016","trumpforpresident","alwaystrump","canadiansforbernie","cruztovictory","republicanparty","cruzcrew","2016presidentialelection","notwithher","presidentialelection2016","billclinton","whichhillary","releasethetranscripts"]
 queryList3 = ["whichhillary","releasethetranscripts"]
 queryList2 = ["NoHillary","NotMiAbuela","NotMyAbuela","CualHillary" ,"NeverHillary","HillNo","Shillary","ShamelessHillary","OhHillNo","HillaryUntrustworthy","StopHillary","FrackYouHillary","BeatHillary","NeverEverHillary","NeverEverEverHillary","HillaryLies"]
-queryList = queryList2
+queryList5 = ["HillarySoQualified"]
+queryList = queryList5
 print len(queryList)
 
-fw = open("data_test_concurrent_Apr_16_3.csv", 'w')
+fw = open("data_test_concurrent_Apr_24_3.csv", 'w')
 counter = 0
 for query in queryList:
     if len(searched_tweets) > max_tweets:
@@ -149,7 +150,7 @@ for query in queryList:
 
 print "Fetched: " + str(len(searched_tweets))
 print len(q_tags)
-fh = open("data_test_Apr_16_3.csv", 'w')
+fh = open("data_test_Apr_24_3.csv", 'w')
 for tweet, q in zip(searched_tweets, q_tags):
     #print q
     fh.write(str(tweet.lang) + "," + q +","+str(tweet.retweeted) + ",'"+str(tweet.user.id) + ",'" + str(tweet.id) + "," + str(tweet.created_at) + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +  " " + "," +tweet.text.replace('\n', ' ').replace('\r', ' ').replace(',', ' ') + '\n')
