@@ -58,8 +58,8 @@ def purifyText(input):
     output = input.replace('\r','').replace('\n','')
     op = re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', output)
     op1 = " ".join(getPureWord(w) for w in op.split())
-    return op1.strip()
-    #return input
+#    return op1.strip()
+    return input
 
 
 def buildHash():
