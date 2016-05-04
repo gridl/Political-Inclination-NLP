@@ -10,16 +10,24 @@ The final set of source codes used for implementation and code demonstration is 
 **1_retrival**
 
 `twitter_extraction.py` : This code extracts tweets in Spanish using keywords which are viral for Presidential primary elections 2016.
+  > python twitter_extraction.py 
 
 `annotate.py` : This is an automatic annotator script which takes the raw extracted data as input and tags some of the corpus with their correct sentiment.
+  > python annotate.py [path_to_file]
 
 **2_learn_classify**
 
-`tweet_classify_es.py mem`: This code implements the classification system using NLTK's MEM. 
-
-`tweet_classify_es.py nb`: This code implements the classification system using NLTK's NB.
-
+`tweet_classify_es.py`: This code implements the classification system using NLTK's NB and MEM models.
+  > For using NB model:-
+  
+  > python tweet_classify_es.py nb [path_to_file]
+  
+  > For using MEM model:-
+  
+  > python tweet_classify_es.py mem [path_to_file]
+  
 `tweet_svm_classify_es.py`: This code implements the classification system using scikit learn's SVM.
+  > python tweet_svm_classify_es.py [path_to_file]
 
 # Contributions
 1. [Nishant Kakar](https://github.com/nishantkakar)
