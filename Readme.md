@@ -5,7 +5,7 @@ CSCI-544 Final Project - House of Translators(HoT)
 The United States Presidential Elections take place every four years with new (sometimes old) candidates every time from the two major political parties, namely Republican and Democratic. We have analyzed Twitter user’s political inclination towards Presidential candidates. We employed three different techniques namely Naïve Bayes (NB), MEMs (Maximum Entropy Models) and SVMs (Support Vector Machines) and compared their results. These techniques can also be used for the analysis of future elections and also for other languages by changing a few input and classification parameters.
 
 ## Usage
-The final set of source codes used for implementation and code demonstration is in *Final Project Codes* folder.
+The final set of source codes used for implementation and code demonstration is in *Final-Project-Codes* folder.
 
 **1_retrival**
 
