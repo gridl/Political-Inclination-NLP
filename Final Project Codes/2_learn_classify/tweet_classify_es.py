@@ -184,11 +184,12 @@ test_set.extend(te_hil_tweets)
 
 # Ref - http://www.nltk.org/api/nltk.classify.html
 # ALGORITHMS = ['GIS', 'IIS', 'MEGAM', 'TADM']
-algorithm = nltk.classify.MaxentClassifier.ALGORITHMS[1]
-classifier = nltk.MaxentClassifier.train(train_set, algorithm, max_iter=3)
-classifier.show_most_informative_features(10)
-
-#classifier = nltk.NaiveBayesClassifier.train(train_set)
+if sys.agrv[1]=="mem":
+    algorithm = nltk.classify.MaxentClassifier.ALGORITHMS[1]
+    classifier = nltk.MaxentClassifier.train(train_set, algorithm, max_iter=3)
+    classifier.show_most_informative_features(10)
+else:
+    classifier = nltk.NaiveBayesClassifier.train(train_set)
 
 #print(nltk.classify.accuracy(classifier, test_set))
 
