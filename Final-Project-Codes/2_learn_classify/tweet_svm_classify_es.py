@@ -106,7 +106,7 @@ def main():
     test_set = []
 
     # Iterating over the annotated tweets and dividing them based on candidates
-    for x in ['annotated.csv']:
+    for x in [sys.argv[1]]:
         tweets = []
         with open('./' + x, 'rb') as csvfile:
             tweets = csvfile.readlines()
