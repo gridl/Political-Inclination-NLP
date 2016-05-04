@@ -15,7 +15,7 @@ gopNuetral = ["republicans","conservatives""republican","gop","republicanparty",
 demNuetral = ["democrats", "bernie","hillary"]
 nuetral = ["presidentialelection","demdebate","gopdebate","aipac2016","2016presidentialelection","presidentialelection2016"]
 
-file_names = ["rawdata.csv"]
+file_names = [sys.argv[1]]
 out_file_name = "../2_learn_classify/annotated.csv"
 
 def getValue(tag, positiveTags, negativeTags):
